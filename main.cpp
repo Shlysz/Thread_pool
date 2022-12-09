@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include "ThreadPool.h"
 #include "pthread.h"
-
+#include "ThreadPoolWithClass.h"
 void taskfunc(void*arg)
 {
     int num=*(int*)arg;
@@ -12,14 +12,13 @@ void taskfunc(void*arg)
 
 int main() {
     //创建线程池
-    ThreadPool*pool= threadPoolCreate(3,10,100);
+    ThreadPoolWithClass pool(3,10);
     for(int i=0;i<100;i++)
     {
         int *num=new int;
         *num=i+100;
-        threadPoolAdd(pool,taskfunc,num);
+       pool.addTask(Task(taskfunc,num));
     }
-    sleep(30);
-    threadPoolDestory(pool);
+    sleep(20);
     return 0;
 }

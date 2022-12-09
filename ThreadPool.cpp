@@ -10,7 +10,7 @@ const int NUMBER=2;
 
 
 //定义线程结构体
-typedef struct Task
+typedef struct TaskQueue
 {
     void (*function)(void *arg);
     void *arg;
@@ -19,7 +19,7 @@ typedef struct Task
 //线程池结构体
 struct ThreadPool
 {
-    Task*taskQ;//任务队列
+    TaskQueue*taskQ;//任务队列
     int queueCapacity;//任务容量
 
     int queueSize;//当前任务个数
@@ -67,7 +67,7 @@ ThreadPool *threadPoolCreate(int min,int max,int queueSize)
         return 0;
     }
     //任务队列
-    pool->taskQ=new Task[queueSize];
+    pool->taskQ=new TaskQueue[queueSize];
     pool->queueCapacity=queueSize;
     pool->queueSize=0;
     pool->queueFront=0;
@@ -115,7 +115,7 @@ void *worker(void*arg)
             ThreadExit(pool);
         }
         //从任务队列取出任务
-        Task task;
+        TaskQueue task;
         task.function=pool->taskQ[pool->queueFront].function;
         task.arg=pool->taskQ[pool->queueFront].arg;
 
